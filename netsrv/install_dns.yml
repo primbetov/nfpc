@@ -1,0 +1,23 @@
+- hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    - name: install updates
+      yum: 
+        name: '*'
+        state: latest
+
+    - name: install epel
+      yum:
+        name: 'epel-release'
+        state: present
+
+    - name: install bind
+      yum:
+        name: 'bind'
+        state: present
+
+    - name: install bind-utils
+      yum:
+        name: 'bind-utils'
+        state: present

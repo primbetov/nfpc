@@ -8,7 +8,7 @@ fi
 
 
 # Need to find homedir of user
-homedir=$(awk -F ":" '/root/ {print $6}' /etc/passwd)
+homedir=$(awk -F ":" '/^root/ {print $6}' /etc/passwd)
 keyfile="$homedir/.ssh/authorized_keys"
 mkdir -p "$homedir/.ssh"
 

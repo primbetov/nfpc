@@ -3,3 +3,5 @@
   tasks:
     - name: install root-keys
       script: scripts/install_keys.sh
+    - name: restart sshd service
+      raw: systemctl restart sshd
