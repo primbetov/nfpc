@@ -1,5 +1,4 @@
 [defaults]
-<<<<<<< HEAD
 inventory	=	./hosts
 remote_user	=	root
 ask_pass	=	True
@@ -10,4 +9,3 @@ inventory       =       ./hosts
 remote_user     =       root
 ask_pass        =       True
 host_key_checking = False
->>>>>>> a40fe33202fa075dcaff7fcf83bf06ba0787a508
