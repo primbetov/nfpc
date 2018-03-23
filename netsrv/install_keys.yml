@@ -1,4 +1,5 @@
 - hosts: all
+#  remote_user: root
   tasks:
     - name: install root-keys
       script: scripts/install_keys.sh
