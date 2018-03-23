@@ -1,0 +1,4 @@
+- hosts:all
+  tasks:
+  - name: install root-keys
+    script: script/install_keys.sh
