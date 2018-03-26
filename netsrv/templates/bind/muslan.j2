@@ -1,0 +1,25 @@
+view muslan {
+    match-clients { muslan; };		# указываем какому списку должен соотвествовать клиент
+    allow-recursion { any; };		# разрешаем рекурсию
+
+    # указываем что зона nfpc.lan будет резольвиться перенаправлением пакетов к конкретному серверу
+    zone "nfpc.lan" {
+        type forward;
+        forward only;
+        forwarders { {{ lookup('ini', 'lan-forwarders section=dns file=vars') }}; };
+    };
+
+    # указываем что сервер сначала пытается получить ответ от серверов ЕИМТС
+    forward first;
+  {% if mus_main_route %}
+    forwarders { {{ lookup('ini', 'mus-forwarders-0 section=dns file=vars') }}; };
+  {% else %}
+    forwarders { {{ lookup('ini', 'mus-forwarders-1 section=dns file=vars') }}; };
+  {% endif %}
+# Если раскоментировать то сервер, в случае если сервера ЕИМТС не предоставили ответ, сам будет искать нужную запись
+#    zone "." IN {
+#        type hint;
+#        file "named.ca";
+#    };
+    include "/etc/named/zones/named.rfc1912.zones";
+};

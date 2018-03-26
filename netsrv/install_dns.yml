@@ -1,4 +1,8 @@
 - hosts: all
+  vars:
+    mus_main_route: true
+    vip_main_route: true
+    serv_main_route: true
   become: yes
   become_user: root
   tasks:
@@ -21,3 +25,83 @@
       yum:
         name: 'bind-utils'
         state: present
+    - name: create /etc/named
+      file:
+        path: /etc/named
+        state: directory
+        mode: 0755
+    - name: create /etc/named/keys
+      file:
+        path: /etc/named/keys
+        state: directory
+        mode: 0755
+    - name: create /etc/named/views
+      file:
+        path: /etc/named/views
+        state: directory
+        mode: 0755
+    - name: create /etc/named/zones
+      file:
+        path: /etc/named/zones
+        state: directory
+        mode: 0755
+    - copy:
+        dest: /etc/named/keys/named.iscdlv.key
+        src: files/bind/keys/named.iscdlv.key
+        owner: root
+        group: root
+        mode: 0644
+    - copy:
+        dest: /etc/named/keys/named.root.key
+        src: files/bind/keys/named.root.key
+        owner: root
+        group: root
+        mode: 644
+    - copy:
+        dest: /etc/named/zones/named.rfc1912.zones
+        src: files/bind/zones/named.rfc1912.zones
+        owner: root
+        group: root
+        mode: 644
+
+    - copy:
+        dest: /etc/named/log.conf
+        src: files/bind/log.conf
+        owner: root
+        group: root
+        mode: 644
+    - copy:
+        dest: /etc/named/named.conf
+        src: files/bind/named.conf
+        owner: root
+        group: root
+        mode: 644
+    - copy:
+        dest: /etc/named/acl.conf
+        src: files/bind/acl.conf
+        owner: root
+        group: root
+        mode: 644
+
+    - name: gen mus conf
+      template:
+        src=templates/bind/muslan.j2
+        dest=/etc/named/views/muslan.conf
+        mode=0644
+        owner=root
+        group=root
+
+    - name: get vipnet conf
+      template:
+        src=templates/bind/musvip.j2
+        dest=/etc/named/views/musvip.conf
+        mode=0644
+        owner=root
+        group=root
+    - name: get serv conf
+      template:
+        src=templates/bind/servfarm.j2
+        dest=/etc/named/views/servfarm.conf
+        mode=0644
+        owner=root
+        group=root

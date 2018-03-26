@@ -1,0 +1,19 @@
+view servfarm {
+    match-clients { servfarm; };	# указываем какому списку должен соотвествовать клиент
+    allow-recursion { any; };		# разрешаем рекурсию
+
+
+    # указываем что сервер сначала пытается получить ответ от серверов ЕИМТС
+    forward first;
+  {% if serv_main_route %}
+    forwarders { {{ lookup('ini', 'serv-forwarders-0 section=dns file=vars') }}; };
+  {% else %}
+    forwarders { {{ lookup('ini', 'serv-forwarders-1 section=dns file=vars') }}; };
+  {% endif %}
+# В случае если DC не предоставит ответ, ДНС-сервер сам будет искать нужную запись
+    zone "." IN {
+        type hint;
+        file "named.ca";
+    };
+    include "/etc/named/zones/named.rfc1912.zones";
+};

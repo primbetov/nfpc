@@ -1,0 +1,11 @@
+[dns]
+
+lan-forwarders=10.90.15.3
+mus-forwarders-0=10.10.51.1
+mus-forwarders-1=10.90.15.3
+
+vip-forwarders-0=10.3.126.2
+vip-forwarders-1=10.90.15.3
+
+serv-forwarders-0=10.90.15.3
+serv-forwarders-1=8.8.8.8

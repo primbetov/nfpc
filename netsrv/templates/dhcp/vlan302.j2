@@ -1,0 +1,61 @@
+#
+#     Сеть ЕИМТС
+#
+
+subnet 10.16.30.0 netmask 255.255.254.0 {
+        interface ens224;
+        authoritative;                                                     #назначить самым главным, если будет ответ на запрос клиента от неавторитетного и от авторитетного сервера, будет выбран ответ авторитетного
+        option domain-name                      "nfpc.lan";                #DNS-домен для подсети
+        default-lease-time                      1200;                       #стандартное время аренды адреса
+        max-lease-time                          1200;                       #максимально возможное время аренды (в случае если клиент запросит большее время)
+
+
+#        option domain-name-servers             10.10.51.2, 10.10.52.3;    # DNS-серверы МУС
+  {% if mus_main_route %}
+        option routers                          10.16.31.254;              # шлюз по умолчанию
+  {% else %}
+        option routers                          10.16.31.253;
+  {% endif %}
+        option domain-name-servers              10.16.31.249, 10.16.31.250;# DNS-сервер наш
+
+        # Под виндой это настраивается через оснастку DHCP-сервер в разделе scope
+        # длина маски , значащие октеты адреса (3 в данном случае), октеты шлюза (4)
+        option ms-classless-static-routes 20, 10,90,0, 10,16,31,253;       # Выдача дополнительных маршрутов для windows
+        option rfc3442-classless-static-routes 20, 10,90,0, 10,16,31,253;  # Выдача дополнительных маршрутов для всех остальных
+
+    # Пул для принтеров и МФУ
+        pool {
+#            failover peer "dhcp-failover";
+            range 10.16.30.193 10.16.30.254;
+            allow members of "printers";
+            option routers 10.16.31.253;
+        }
+    # Пул для не известных хостов
+        pool {
+#            failover peer "dhcp-failover";
+            range 10.16.30.31 10.16.30.192;
+            deny members of "printers";
+#            allow unknown-clients;
+        }
+    # Пул для известных хостов
+        pool {
+#            failover peer "dhcp-failover";
+            range 10.16.31.1 10.16.31.128;
+            deny members of "printers";
+#            deny unknown-clients;
+#            allow unknown-clients;
+        }
+        pool {
+#            failover peer "dhcp-failover";
+            range 10.16.31.129 10.16.31.224;
+            deny members of "printers";
+        }
+}
+
+
+
+#zone 12.90.10.in-addr.arpa. {
+#        primary 127.0.0.1;
+#        key ddns-key;
+#}
+

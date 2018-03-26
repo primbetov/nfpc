@@ -1,0 +1,38 @@
+subnet 10.251.212.0 netmask 255.255.254.0 {
+        interface ens256;
+  {%if vip_main_route %}
+        option routers                          10.251.213.254;
+  {% else %}
+        option routers                          10.251.213.253;
+  {% endif %}
+        authoritative;
+        option domain-name-servers              10.251.213.249, 10.251.213.250;
+        option domain-name                      "nfpc.lan";
+        default-lease-time                      3600;
+        max-lease-time                          3600;
+        option ms-classless-static-routes       20, 10,90,0, 10,251,213,253;
+        option rfc3442-classless-static-routes  20, 10,90,0, 10,251,213,253;
+
+    # Пул для не известных хостов
+        pool {
+            option domain-name-servers 10.251.213.249;
+            option domain-name "nfpc.lan";
+            range 10.251.212.31 10.251.212.128;
+            allow unknown-clients;
+        }
+    # Пул для известных хостов
+        pool {
+            option domain-name-servers 10.251.213.249;
+            option domain-name "nfpc.lan";
+            range 10.251.212.129 10.251.213.224;
+            deny unknown-clients;
+        }
+}
+
+
+
+#zone 212.251.10.in-addr.arpa. {
+#        primary 127.0.0.1;
+#        key ddns-key;
+#}
+

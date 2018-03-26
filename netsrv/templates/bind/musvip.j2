@@ -1,0 +1,25 @@
+view musvip {
+    match-clients { musvip; };
+    allow-recursion { any; };
+
+    # указываем что зона nfpc.lan будет резолвиться, через отдельные сервера
+    zone "nfpc.lan" {
+        type forward;
+        forward only;
+        forwarders { 10.90.15.3; };
+    };
+
+    # сервер будет искать запись только у ДНС-серверов сети 2131
+    forward only;
+  {% if vip_main_route %}
+    forwarders { {{ lookup('ini', 'vip-forwarders-0 section=dns file=vars') }}; };
+  {% else %}
+    forwarders { {{ lookup('ini', 'vip-forwarders-1 section=dns file=vars') }}; };
+  {% endif %}
+
+#    zone "." IN {
+#        type hint;
+#        file "named.ca";
+#    };
+    include "/etc/named/zones/named.rfc1912.zones";
+};

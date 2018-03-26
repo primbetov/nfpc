@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# VERSION: v3
+
+
 keys[0]="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFChKXmWoquiPb9/672PySge/grKK17JgnDvoXKjQWhm5tkJsFHHXKIw5WKxFK5l87cGP8RfKsa1d08yO/RsIg901LQGDcTlOrohkdWecszQASKyrwls2shprjBemtntBjrmVzvtaPDSdOWgLPu8sEE4/cGGbYLSbami719gVosDg9KPWRORTIVkybqnyFLJvDNY+JyJjU96bkLvSKV0/xBDF95ItW8EFZLBp4lj3PSZQg8w0pphteknPz00lJGayM5kaEF4lOEerY7ZKlq6fzfFWw5qof5s/kgNc9Cf4j+xlm1pwLLfnC5unz/tj7gnDa3ZWpFDU34yXBDBr/GHnb root@test1"
 if [ -z "$1" ];then 
   user="root"

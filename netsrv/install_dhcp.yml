@@ -1,0 +1,109 @@
+- hosts: all
+  vars:
+    mus_main_route: true
+    vip_main_route: true
+    serv_main_route: true
+  become: yes
+  become_user: root
+  tasks:
+    - name: install isc-dhcp
+      yum: 
+        name: 'dhcp'
+        state: present
+
+    - name: install dhcping
+      yum:
+        name: 'dhcping'
+        state: present
+
+    - copy:
+        dest: /etc/dhcp/dhcpd.conf
+        src: files/dhcp/dhcpd.conf
+        owner: root
+        group: root
+        mode: 644
+
+    - copy:
+        dest: /etc/dhcp/dhcpd.keytab
+        src: files/dhcp/dhcpd.keytab
+        owner: root
+        group: root
+        mode: 644
+
+    - name:
+      file:
+        path: /etc/dhcp/dhcpd.d
+        state: directory
+        mode: 0755
+
+    - name:
+      file:
+        path: /etc/dhcp/scripts
+        state: directory
+        mode: 0755
+
+    - copy:
+        dest: /etc/dhcp/scripts/dnsupdate.sh
+        src: files/dhcp/scripts/dnsupdate.sh
+        owner: root
+        group: root
+        mode: 711
+
+    - copy:
+        dest: /etc/dhcp/dhcpd.d/classes.conf
+        src: files/dhcp/dhcpd.d/classes.conf
+        owner: root
+        group: root
+        mode: 644
+
+    - copy:
+        dest: /etc/dhcp/dhcpd.d/hosts.conf
+        src: files/dhcp/dhcpd.d/hosts.conf
+        owner: root
+        group: root
+        mode: 644
+
+    - copy:
+        dest: /etc/dhcp/dhcpd.d/vlan101.conf
+        src: files/dhcp/dhcpd.d/vlan101.conf
+        owner: root
+        group: root
+        mode: 644
+
+    - copy:
+        dest: /etc/dhcp/dhcpd.d/vlan120.conf
+        src: files/dhcp/dhcpd.d/vlan120.conf
+        owner: root
+        group: root
+        mode: 644
+
+    - copy:
+        dest: /etc/dhcp/dhcpd.d/vlan90.conf
+        src: files/dhcp/dhcpd.d/vlan90.conf
+        owner: root
+        group: root
+        mode: 644
+
+    - name: gen servfarm conf
+      template:
+        src=templates/dhcp/vlan300.j2
+        dest=/etc/dhcp/dhcpd.d/vlan300.conf
+        mode=0644
+        owner=root
+        group=root
+
+    - name: gen muslan conf
+      template:
+        src=templates/dhcp/vlan302.j2
+        dest=/etc/dhcp/dhcpd.d/vlan302.conf
+        mode=0644
+        owner=root
+        group=root
+
+    - name: gen vipnet conf
+      template:
+        src=templates/dhcp/vlan305.j2
+        dest=/etc/dhcp/dhcpd.d/vlan305.conf
+        mode=0644
+        owner=root
+        group=root
